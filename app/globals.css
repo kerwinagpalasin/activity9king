@@ -97,7 +97,7 @@ body {
 input{
   background-color: rgb(14, 1, 1);
   padding: 10px;
-  position: absolute;
+  
 }
 textarea{
   background-color: rgb(12, 0, 0);
@@ -109,7 +109,7 @@ textarea{
   
 }
 body {
-  background-image: url(giphy.gif);
+  background-image: url(12.gif);
  
   background-repeat: no-repeat;
   background-size: cover;
@@ -127,7 +127,7 @@ label{
   font-style: italic;
 }
 button{
-  padding: 5px;
+  padding: 10px;
   border-radius: 50px;
 }
 
