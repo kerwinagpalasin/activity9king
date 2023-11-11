@@ -94,6 +94,42 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+input{
+  background-color: rgb(14, 1, 1);
+  padding: 10px;
+  position: absolute;
+}
+textarea{
+  background-color: rgb(12, 0, 0);
+  padding: 10px;
+  padding-top: 50px;
+  height: 50px;
+  text-align: center;
+  
+  
+}
+body {
+  background-image: url(giphy.gif);
+ 
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+div{
+  text-align: center;
+  max-width: 100%;
+  min-width: 140px;
+  margin: auto;
+}
+label{
+  font-size: 30px;
+  color: rgb(31, 163, 196);
+  font-family:Phantomsans, sans-serif;
+  font-style: italic;
+}
+button{
+  padding: 5px;
+  border-radius: 50px;
+}
 
 a {
   color: inherit;

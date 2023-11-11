@@ -1,95 +1,74 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client"
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import CreateItem from '@/src/components/CreateItem';
+import UpdateItem from '@/src/components/UpdateItem';
+import ReadItems from '@/src/components/ReadItem';
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+const Home = () => {
+ const [items, setItems] = useState([]);
+ const [selectedItem, setSelectedItem] = useState(null);
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+ useEffect(() => {
+   const fetchData = async () => {
+     try {
+       const response = await axios.get('http://localhost:8000/api/items');
+       setItems(response.data);
+     } catch (error) {
+       console.error('Error fetching data:', error);
+     }
+   };
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+   fetchData();
+ }, []);
+
+
+ const handleCreate = async (newItem) => {
+   try {
+     const response = await axios.post('http://localhost:8000/api/items', newItem);
+     setItems([...items, response.data]);
+   } catch (error) {
+     console.error('Error creating item:', error);
+   }
+ };
+
+
+ const handleUpdate = (item) => {
+   setSelectedItem(item);
+ };
+
+ const handleUpdateItem = async (id, updatedItem) => {
+   try {
+     const response = await axios.put(`http://localhost:8000/api/items/${id}`, updatedItem);
+     setItems(items.map((item) => (item.id === id ? response.data : item)));
+     setSelectedItem(null);
+   } catch (error) {
+     console.error('Error updating item:', error);
+   }
+ };
+
+ const handleDeleteItem = async (id) => {
+   try {
+     await axios.delete(`http://localhost:8000/api/items/${id}`);
+     setItems(items.filter((item) => item.id !== id));
+   } catch (error) {
+     console.error('Error deleting item:', error);
+   }
+ };
+
+ return (
+   <div>
+     <CreateItem onCreate={handleCreate} />
+     <ReadItems items={items} onUpdate={handleUpdate} onDelete={handleDeleteItem} />
+     {selectedItem && (
+       <UpdateItem item={selectedItem} onUpdate={handleUpdateItem} onCancel={() => setSelectedItem(null)} />
+     )}
+   </div>
+ );
+};
+
+
+export default Home;
